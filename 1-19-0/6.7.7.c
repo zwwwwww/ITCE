@@ -1,0 +1,33 @@
+/*
+From:ITC
+6
+Pointer related defects
+6.7
+Uninitialized pointer
+6.7.7
+using a double char pointer arrays
+*/
+    
+extern int sink;         
+void uninit_pointer_007 ()
+{
+        char *buf1=strdup("String1");
+	char *buf2=strdup("String2");
+	char *buf3=strdup("String3");
+	char *buf4=strdup("String4");
+	char *buf5=strdup("String5");
+        if (!buf1 || !buf2 || !buf3 || !buf4 || !buf5) return;
+	char **pbuf[5] = {&buf1, &buf2, &buf3, &buf4, &buf5};
+	int i,j=4;
+
+	for(i=0;i<5;i++)
+	{
+          *((*pbuf[i])+j)='a'; /*Tool should not detect this line as error*/ /*No ERROR:Uninitialized pointer*/
+	    printf("uninit %c \n",*((*pbuf[i])+j));
+	}
+        free(buf1);
+        free(buf2);
+        free(buf3);
+        free(buf4);
+        free(buf5);
+}
